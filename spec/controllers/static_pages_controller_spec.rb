@@ -1,28 +1,34 @@
 require 'rails_helper'
+require 'webdrivers'
 
 
-
-RSpec.describe StaticPagesController, :type => :controller do
+RSpec.describe StaticPagesController, type: :request do
+    def setup
+        @base_title = "Mini Twitter"
+    end
+    
     it "should return home page for /home" do
-        # static_pages_controller=StaticPagesController.new
-        # home=static_pages_controller.home
-        get :home
-        expect(response).to have_http_status(:ok)
-        
+        visit '/static_pages/home'
+        expect(page).to have_http_status(:ok)
     end
 
-    it "should return help page for /help" do
-        get :help
-        expect(response).to have_http_status(:ok)
-        
+    it "should have the title Home" do
+        visit '/static_pages/home'
+        expect(page).to have_title("Home | #{@base_title}")
+    end
+
+
+    it "should return About page for /about" do
+        visit '/static_pages/about'
+        expect(page).to have_http_status(:ok)
+        expect(page).to have_title("About | #{@base_title}")
     end
 
     it "should return About page for /about" do
-        # static_pages_controller=StaticPagesController.new
-        # about=static_pages_controller.about
-        get :about
-        expect(response).to have_http_status(:ok)
-        
+        visit '/static_pages/about'
+        expect(page).to have_title("About | #{@base_title}")
     end
+
+
     
 end
