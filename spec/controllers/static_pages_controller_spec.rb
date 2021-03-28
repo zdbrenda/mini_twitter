@@ -11,15 +11,10 @@ RSpec.describe StaticPagesController, type: :request do
         visit '/'
         expect(page).to have_http_status(:ok)
     end
-    
-    it "should return home page for /home" do
-        visit '/static_pages/home'
-        expect(page).to have_http_status(:ok)
-    end
 
-    it "should have the title Home" do
-        visit '/static_pages/home'
-        expect(page).to have_title("Home | #{@base_title}")
+    it "should get root" do
+        visit '/'
+        expect(page).to have_title("#{@base_title}")
     end
 
 
