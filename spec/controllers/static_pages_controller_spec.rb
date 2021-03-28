@@ -6,6 +6,11 @@ RSpec.describe StaticPagesController, type: :request do
     def setup
         @base_title = "Mini Twitter"
     end
+
+    it "should get root" do
+        visit '/'
+        expect(page).to have_http_status(:ok)
+    end
     
     it "should return home page for /home" do
         visit '/static_pages/home'
