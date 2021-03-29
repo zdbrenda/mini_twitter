@@ -7,39 +7,38 @@ RSpec.describe StaticPagesController, type: :request do
         @base_title = "Mini Twitter"
     end
 
-    it "should get root" do
-        visit '/'
-        expect(page).to have_http_status(:ok)
+    describe "Root page" do
+        before { visit root_path }
+
+        it "should get root" do
+            expect(page).to have_http_status(:ok)
+        end
+    
+        it "should get root" do
+            expect(page).to have_title("#{@base_title}")
+        end
     end
 
-    it "should get root" do
-        visit '/'
-        expect(page).to have_title("#{@base_title}")
+    describe "About page" do 
+        before { visit about_path  }
+        it "should return About page for /about" do
+            expect(page).to have_http_status(:ok)
+        end
+    
+        it "should return About page for /about" do
+            expect(page).to have_title("About | #{@base_title}")
+        end     
     end
 
-
-    it "should return About page for /about" do
-        visit '/static_pages/about'
-        expect(page).to have_http_status(:ok)
+    describe "Contact page" do
+        before {   visit contact_path }
+        it "should return About page for /contact" do
+            expect(page).to have_http_status(:ok)
+        end
+    
+        it "should return About page for /contact" do
+            expect(page).to have_title("Contact | #{@base_title}")
+        end
     end
-
-    it "should return About page for /about" do
-        visit '/static_pages/about'
-        expect(page).to have_title("About | #{@base_title}")
-    end
-
-    it "should return About page for /contact" do
-        visit '/static_pages/contact'
-        expect(page).to have_http_status(:ok)
-    end
-
-    it "should return About page for /contact" do
-        visit '/static_pages/contact'
-        expect(page).to have_title("Contact | #{@base_title}")
-    end
-
-
-
-
     
 end
