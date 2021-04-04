@@ -17,7 +17,7 @@ RSpec.describe "AuthenticationPages", type: :request do
       end
     end
 
-    describe "with valid information" do
+    describe "with valid information followed by logout" do
       let(:user) { FactoryGirl.create(:user) }
       before do
         fill_in "Email",      with: user.email.upcase
@@ -30,8 +30,12 @@ RSpec.describe "AuthenticationPages", type: :request do
       it { should_not have_link( 'Sign in', href: signin_path) }
       
       describe "followed by signout" do
-        before { click_link "Sign out" }
+        before do
+          click_link "Sign out" 
+          delete signout_path
+        end
         it { should have_link("Sign in")}
+        it { should_not have_link("Sign out")}
       end
 
     end
@@ -39,4 +43,6 @@ RSpec.describe "AuthenticationPages", type: :request do
     it { should have_content("Sign in") }
     it { should have_title("Sign in") }
   end
+
+
 end
