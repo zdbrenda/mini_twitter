@@ -1,5 +1,6 @@
 module ApplicationHelper
     # Returns the full title on a page_page basis
+    
     def full_title(page_title = '' )
         base_title = "Mini Twitter"
         if page_title.empty?

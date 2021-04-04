@@ -1,5 +1,5 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
+@import "~bootstrap/scss/bootstrap";
+
 
 /* mixins, variables, etc. */
 $grayMediumLight:#eaeaea;
@@ -37,11 +37,15 @@ textarea {
     }
 }
 
+.navbar-fixed-top{
 
+    float: right;
+  }
 /* typography */
 
 h1,h2,h3, h4, h5, h6{
     line-height: 1;
+    
 }
 
 h1{
@@ -86,9 +90,9 @@ p {
     }
 }
 
+header{
 
-
-
+}
 
 img{
     height: 100px;
@@ -108,12 +112,10 @@ img{
         list-style: none;
 
         li{
-            float: left;
+            float: right;
             margin-left: 10px;
         }
     }
-  
-
   }
 
   
@@ -131,13 +133,16 @@ img{
   /* sidebar */
 
   aside {
+    section.user_info {
+        margin-top:20px;
+        }
     section {
         padding: 10px 0;
-        border-top: 1px solid $grayMediumLight;
+        margin-top: 20px;
         &:first-child{
             border: 0;
             padding-top: 0;
-        }
+    }
 
         span{
             display: block;
@@ -159,6 +164,10 @@ img{
   .gravatar {
       float: left;
       margin-right: 10px;
+  }
+
+  .gravatar-edit {
+      margin-top: 15px;
   }
 
   /* forms */
@@ -186,3 +195,6 @@ img{
       @extend .control-group !optional;
       @extend .error !optional;
   }
+
+  
+
