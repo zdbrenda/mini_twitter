@@ -23,6 +23,9 @@ gem 'jbuilder', '~> 2.7'
 gem 'pg'
 gem 'bcrypt-ruby'
 gem 'rails-controller-testing'
+gem 'faker'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password

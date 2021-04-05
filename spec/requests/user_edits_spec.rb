@@ -41,9 +41,21 @@ RSpec.describe "UserEdits", type: :request do
     end
 
     describe "when user is not logged in " do
-        describe "submitting to the update action" do
-            before { patch user_path(user)}
-            specify { expect(@response).to redirect_to(signin_path)}
+        describe "submitting to the update action with friendly forwarding" do
+            before do
+                visit edit_user_path(user)
+            end
+
+            it "forwards your page to edit page after you log in" do
+                sleep 5
+                fill_in "Email", with: user.email
+                fill_in "Password", with: user.password
+                click_button "Sign in"
+
+                expect(page.current_path).to eq edit_user_path(user)
+            end
+
+            
         end
     end
     
@@ -63,20 +75,18 @@ RSpec.describe "UserEdits", type: :request do
         describe "submitting a GET request to the Users#edit action" do
             before { visit edit_user_path(@user) }
 
-            # failing test case #1
-
-            # it "redirects to root_url" do
-            #     expect(response).to redirect_to(root_url)
-            # end
+            it "redirects to root_url" do
+                expect(page.current_path).to eq "/"
+            end
         end
 
         describe "submitting a PATCH request to the Users#update action" do
 
             before { patch user_path(@user)}
 
-            # failing test case #2
+            # Test case still failing
             # it "redirects to root_url" do
-            #     expect(response).to redirect_to(root_url)
+            #     expect(page.current_path).to eq "/"
             # end
         end
 
