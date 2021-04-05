@@ -81,6 +81,31 @@ RSpec.describe "UserPages", type: :request do
       end
     end
 
+    describe "delete links" do
+      it { should_not have_link('delete') }
+
+      describe "as an admin user" do
+        let( :admin ) { FactoryGirl.create(:admin) }
+        before do
+          visit signin_path
+          fill_in "Email",    with: admin.email
+          fill_in "Password", with: admin.password
+          click_button "Sign in"
+          visit users_path
+        end
+
+        it "should be able to delete another user" do
+          expect do
+            click_link("delete", match: :first)
+          end.to change(User, :count).by(-1)
+        end
+
+        it {should_not have_link('delete', href: user_path(admin)) }
+      end
+    end
+
+
+
     
   end
 

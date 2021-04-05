@@ -44,6 +44,26 @@ RSpec.describe "AuthenticationPages", type: :request do
 
     it { should have_content("Sign in") }
     it { should have_title("Sign in") }
+
+    describe "as non-admin user" do
+      let(:user)      { FactoryGirl.create(:user) }
+      let(:non_admin) { FactoryGirl.create(:user) }
+
+      before do
+        visit signin_path
+        fill_in "Email",    with: non_admin.email
+        fill_in "Password", with: non_admin.password
+        click_button "Sign in"
+      end
+
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before { delete user_path(user) }
+        it"renders index page" do
+          expect(page.current_path).to eq '/'
+        end
+        
+      end
+    end
   end
 
 
