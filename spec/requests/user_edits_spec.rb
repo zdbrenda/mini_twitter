@@ -47,7 +47,7 @@ RSpec.describe "UserEdits", type: :request do
             end
 
             it "forwards your page to edit page after you log in" do
-                sleep 5
+                sleep 3
                 fill_in "Email", with: user.email
                 fill_in "Password", with: user.password
                 click_button "Sign in"
@@ -60,20 +60,20 @@ RSpec.describe "UserEdits", type: :request do
     end
     
     describe "as wrong user" do
-        before do
-            @user = FactoryGirl.create(:user)
-            @wrong_user = User.create(:name=>"wrong user", :email =>'wrong@gmail.com', :password =>'123456', :password_confirmation => '123456')
-        end
+        
+        let(:user) {FactoryGirl.create(:user)}
+        let(:wrong_user) {User.create(:name=>"wrong user", :email =>'wrong@gmail.com', 
+            :password =>'123456', :password_confirmation => '123456')} 
 
         before do
             visit signin_path
-            fill_in "Email",    with: @wrong_user.email
-            fill_in "Password", with: @wrong_user.password
+            fill_in "Email",    with: wrong_user.email
+            fill_in "Password", with: wrong_user.password
             click_button "Sign in"
         end
 
         describe "submitting a GET request to the Users#edit action" do
-            before { visit edit_user_path(@user) }
+            before { visit edit_user_path(user) }
 
             it "redirects to root_url" do
                 expect(page.current_path).to eq "/"
@@ -82,9 +82,12 @@ RSpec.describe "UserEdits", type: :request do
 
         describe "submitting a PATCH request to the Users#update action" do
 
-            before { patch user_path(@user)}
+            before do
+                page.driver.submit :patch, '/users/user.id', {}
+            end
+            
 
-            # Test case still failing
+            # sleep 3
             # it "redirects to root_url" do
             #     expect(page.current_path).to eq "/"
             # end

@@ -57,9 +57,14 @@ RSpec.describe "AuthenticationPages", type: :request do
       end
 
       describe "submitting a DELETE request to the Users#destroy action" do
-        before { delete user_path(user) }
+        before do
+
+          user_id = user.id
+          page.driver.submit :delete, '/users/user_id', {}
+        end
+    
         it"renders index page" do
-          expect(page.current_path).to eq '/'
+          expect(page).to have_current_path '/'
         end
         
       end
