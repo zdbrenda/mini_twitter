@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   match '/signin',    to: 'sessions#new',           via: 'get'
   match '/signin',    to: 'sessions#create',        via: 'post'
   match '/signout',   to: 'sessions#destroy',       via: 'delete'
+  resources :account_activations, only: [:edit]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   
 end

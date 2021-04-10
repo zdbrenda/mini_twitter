@@ -63,7 +63,7 @@ RSpec.describe "UserEdits", type: :request do
         
         let(:user) {FactoryGirl.create(:user)}
         let(:wrong_user) {User.create(:name=>"wrong user", :email =>'wrong@gmail.com', 
-            :password =>'123456', :password_confirmation => '123456')} 
+            :password =>'123456', :password_confirmation => '123456', :activated => true, :activated_at => Time.zone.now)} 
 
         before do
             visit signin_path

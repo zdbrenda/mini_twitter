@@ -11,8 +11,11 @@ RSpec.describe "UserPages", type: :request do
   end
 
   describe "signup" do
-    before { visit sign_up_path }
     let(:submit) { "Create my account" }
+    before do
+      visit sign_up_path 
+      ActionMailer::Base.deliveries.clear
+    end
 
     describe "with invalid information" do
       it "should not create a user" do
@@ -21,7 +24,6 @@ RSpec.describe "UserPages", type: :request do
 
       describe "after submission" do
         before { click_button submit }
-
         it { should have_title("Sign up") }
         it { should have_content('error') }
         it { should have_content("Name can't be blank") }
@@ -31,18 +33,68 @@ RSpec.describe "UserPages", type: :request do
       end
     end
 
-    describe "with valid information" do
+    describe "sign up a user with valid info" do
+      let(:user) { User.new(:name => "inactivated user", :email=>"some@email.com", :password => "foobar") }
       before do
-        fill_in "Name",         with: "Example User"
-        fill_in "Email",        with: "user@example.com"
-        fill_in "Password",     with: "foobar"
-        fill_in "Password confirmation", with: "foobar"
+        fill_in "Name",         with: user.name
+        fill_in "Email",        with: user.email
+        fill_in "Password",     with: user.password
+        fill_in "Password confirmation", with: user.password
       end
 
       it "should create a user" do
-        expect { click_button submit }.to change(User, :count).by(1)
+        expect{click_button submit}.to change{User.count}.by(1)
+        expect(user).to be_truthy
+        expect(user.activated).to be false
       end
     end
+
+    describe "activation emails" do
+      let(:user) { User.create(:name => "inactivated user", :email=>"some@email.com", :password => "foobar") }
+      let(:submit) { "Create my account" }
+      before do 
+        fill_in "Name",         with: user.name
+        fill_in "Email",        with: user.email
+        fill_in "Password",     with: user.password
+        fill_in "Password confirmation", with: user.password
+        click_button submit 
+      end
+
+      it "should not activate user with invalid activation token" do
+        get edit_account_activation_path("invalid token", email:"some@email.com")
+        expect(user.activated).to be false
+        expect(session[:user_id]).to eq(nil)
+      end
+
+      it "should not activate user for a wrong email" do
+        get edit_account_activation_path(user.activation_token, email: "wrong")
+        expect(session[:user_id]).to eq(nil)
+      end
+
+      it "should activate user with valid activation token and valid user email" do
+        get edit_account_activation_path(user.activation_token, email: "some@email.com")
+        expect(user.reload.activated).to be true
+      end
+    end
+
+    describe "sending out activation emails" do
+      let(:user) { User.new(:name => "inactivated user", :email=>"some@email.com", :password => "foobar") }
+      let(:submit) { "Create my account" }
+
+      before do
+        fill_in "Name",         with: user.name
+        fill_in "Email",        with: user.email
+        fill_in "Password",     with: user.password
+        fill_in "Password confirmation", with: user.password 
+      end
+
+      it "should create an email when signing up a user" do
+        expect {click_button submit}.to change {
+            ActionMailer::Base.deliveries.size}.by(1)
+      end
+    end
+
+
   end
 
   describe "profile page" do
